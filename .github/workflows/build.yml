@@ -25,6 +25,8 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: shreyashsaitwal/rush-cli@v2
+      - name: Generate Paho resource bundles
+        run: python3 tools/generate_paho_resources.py
       - run: rush build
       - uses: actions/upload-artifact@v7
         with:
