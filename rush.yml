@@ -11,9 +11,9 @@ min_sdk: 21
 # stored in the "deps" directory or coordinates of remote Maven artifacts in
 # <groupId>:<artifactId>:<version> format. AARs ship with their resources
 # (layouts, drawables, etc.), renamed into the extension unless placed as shared.
-#dependencies:
-#- example.jar                 # Local JAR or AAR file stored in "deps" directory
-#- com.example:foo-bar:1.2.3   # Coordinate of some remote Maven artifact
+dependencies:
+  - org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5   # Local JAR or AAR file stored in "deps" directory
+#  # Coordinate of some remote Maven artifact
 
 # Dependencies are resolved from Maven Central and Google's Maven repository. If
 # the library you want to use is not available in these repositories, you can
