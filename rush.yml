@@ -12,7 +12,7 @@ min_sdk: 21
 # <groupId>:<artifactId>:<version> format. AARs ship with their resources
 # (layouts, drawables, etc.), renamed into the extension unless placed as shared.
 dependencies:
-  - org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5   # Local JAR or AAR file stored in "deps" directory
+  - org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0   # Local JAR or AAR file stored in "deps" directory
 #  # Coordinate of some remote Maven artifact
 
 # Dependencies are resolved from Maven Central and Google's Maven repository. If
