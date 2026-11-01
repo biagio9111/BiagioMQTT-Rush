@@ -1,23 +1,16 @@
-# Rush extension template
+# BiagioMQTT
 
-Create an [MIT App Inventor](https://appinventor.mit.edu) extension without installing
-anything. Everything happens on GitHub, in your browser.
+An App Inventor 2 extension created using [Rush](https://github.com/shreyashsaitwal/rush-cli).
 
-1. **Create your repository.** Click **Use this template** → **Create a new repository**
-   at the top of this page, give it a name, and click **Create repository**.
-2. **Create the extension.** In your new repository, open the **Actions** tab, choose
-   **Create extension**, and click **Run workflow**. Fill in:
-   - **Name:** your extension's name, like `WeatherInfo`.
-   - **Package:** a name only you would use, written backwards like a web address, such
-     as `io.github.yourname`.
-   - **Language:** Java or Kotlin.
+## Building
 
-   After about a minute, your repository contains the extension's project, and the
-   **Build** workflow builds it. Its run page has the extension (`.aix`) to download.
-3. **Start working.** Click **Code** → **Codespaces** → **Create codespace on main**. VS
-   Code opens in your browser, with everything needed to build the extension. Describe
-   what you want to GitHub Copilot, or run `rush build` in the terminal yourself.
+Run `rush build` in this directory. The extension is written to the `out`
+directory as an `.aix` file, ready to import into App Inventor.
 
-The project is made with [Rush](https://github.com/shreyashsaitwal/rush-cli). Its
-[guide](https://github.com/shreyashsaitwal/rush-cli/blob/main/docs/README.md) explains
-how extensions work, building and releasing them, and working with AI agents.
+Run `rush build --optimize` to also optimize and obfuscate the extension's code.
+
+## Releasing
+
+GitHub Actions builds the extension when a push or pull request changes it. To publish
+a release, push a tag named after the version in `rush.yml`, like `v1.0.0`.
+The workflow attaches the `.aix` file and its documentation to the release.
