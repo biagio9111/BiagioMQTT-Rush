@@ -1,0 +1,75 @@
+name: Create extension
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: Extension name, like WeatherInfo
+        required: true
+      package:
+        description: Package name in reverse domain notation, like io.github.yourname
+        required: true
+      language:
+        description: Language
+        type: choice
+        options: [Java, Kotlin]
+        default: Java
+
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    env:
+      NAME: ${{ inputs.name }}
+      PACKAGE: ${{ inputs.package }}
+      LANGUAGE: ${{ inputs.language }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Check the inputs
+        run: |
+          fail() {
+            echo "::error::$1"
+            echo "$1" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          }
+          [ ! -f rush.yml ] || fail "This repository already has an extension."
+          [[ "$NAME" =~ ^[A-Za-z][A-Za-z0-9]*$ ]] ||
+            fail "The name \"$NAME\" must start with a letter and contain only letters and digits, like WeatherInfo."
+          [[ "$PACKAGE" =~ ^[a-z][a-z0-9_]*(\.[a-z][a-z0-9_]*)+$ ]] ||
+            fail "The package \"$PACKAGE\" must be lowercase words separated by dots, like io.github.yourname."
+
+      - uses: shreyashsaitwal/rush-cli@v2
+
+      - name: Create the project
+        run: |
+          (cd "$RUNNER_TEMP" && rush --no-color create "$NAME" --package "$PACKAGE" --language "$LANGUAGE" --ide eclipse)
+          project="$RUNNER_TEMP/$NAME"
+          for workflow in "$project"/.github/workflows/*; do
+            if ! cmp -s "$workflow" ".github/workflows/$(basename "$workflow")"; then
+              echo "::warning::$(basename "$workflow") differs from the one Rush creates. Update the template."
+            fi
+          done
+          rm -rf "$project/.github/workflows" README.md
+          cp -a "$project/." .
+
+      - name: Commit the project
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Create the $NAME extension"
+          git push
+
+      - name: Build the extension
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run build.yml --ref "$GITHUB_REF_NAME"
+          {
+            echo "Created the $NAME extension. The **Build** workflow is building it now."
+            echo
+            echo "Next, open it in a codespace: **Code** → **Codespaces** → **Create codespace on main**."
+          } >> "$GITHUB_STEP_SUMMARY"
